@@ -31,7 +31,7 @@ public class Itemize {
 		}
 	}
 
-	public ItemStackProvider getProvider() {
+	public static ItemStackProvider getProvider() {
 		return Itemize.itemStackProvider;
 	}
 }

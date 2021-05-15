@@ -29,13 +29,6 @@ public interface ItemData {
 
 	NBTCompound getTags();
 
-	public default void buildMeta(ItemizeMeta.Builder builder) {
-		builder
-			.displayName(getDisplayName())
-			.lore(getLore())
-			.customModelData(getCmd());
-	}
-
 	// Registry
 	public static final Map<String, ItemData> ITEM_REGISTRY = new ConcurrentHashMap<>();
 

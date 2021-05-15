@@ -6,7 +6,12 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import main.data.ItemData;
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.command.CommandSender;
+import net.minestom.server.command.builder.Command;
+import net.minestom.server.command.builder.CommandContext;
+import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.player.PlayerLoginEvent;
@@ -35,15 +40,14 @@ public class ItemizeTest {
     		event.setSpawningInstance(instance);
     	});
 
-
-
-
     	handler.addEventCallback(PlayerSpawnEvent.class, event -> {
     		final Player player = event.getPlayer();
     		player.teleport(new Position(0, 5, 0));
-
-
     	});
+    	
+    	Itemize.init(null);
+    	
+    	MinecraftServer.getCommandManager().register(new ItemCommand());
 
     	server.start("0.0.0.0", 25565);
     }
@@ -71,5 +75,24 @@ public class ItemizeTest {
     	}
 
     }
+    
+    
+    private static class ItemCommand extends Command {
 
+		public ItemCommand() {
+			super("item");
+			
+			String[] argRestrictions = ItemData.ITEM_REGISTRY.keySet().toArray(String[]::new);
+			
+			addSyntax(ItemCommand::run, ArgumentType.Word("id").from(argRestrictions));
+			
+		}
+    	
+		private static void run(CommandSender sender, CommandContext context) {
+			Player player = sender.asPlayer();
+			String ID = context.get("id");
+			
+			player.getInventory().addItemStack(Itemize.getProvider().create(ID, 0));
+		}
+    }
 }

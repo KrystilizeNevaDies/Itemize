@@ -8,7 +8,7 @@ import main.meta.ItemizeMeta;
 import net.minestom.server.item.ItemStack;
 
 public interface ItemStackProvider {
-	public ItemStack create(String ID);
+	public ItemStack create(String ID, long origin);
 
-	public ItemStack create(String ID, @NotNull Consumer<ItemizeMeta.Builder> metaBuilderConsumer);
+	public ItemStack create(String ID, long origin, @NotNull Consumer<ItemizeMeta.Builder> metaBuilderConsumer);
 }

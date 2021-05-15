@@ -8,8 +8,8 @@ gradle-app.setting
 !gradle-wrapper.jar
 
 .*
-
 *.class
+/minecraft_data/
 
 # Cache of project
 .gradletasknamecache

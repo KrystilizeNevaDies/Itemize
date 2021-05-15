@@ -16,26 +16,28 @@ public class ItemizeItemProvider implements ItemStackProvider {
 	 * Creates a new itemstack using the registered data for the ID
 	 */
 	@Override
-	public ItemStack create(String ID) {
-		return create(ID, _m -> {});
+	public ItemStack create(String ID, long origin) {
+		return create(ID, origin, _m -> {});
 	}
 
 	/**
 	 * Creates a new itemstack using the registered data for the ID and the specified meta builder consumer
 	 */
 	@Override
-	public ItemStack create(String ID, @NotNull Consumer<ItemizeMeta.Builder> metaBuilderConsumer) {
+	public ItemStack create(String ID, long origin, @NotNull Consumer<ItemizeMeta.Builder> metaBuilderConsumer) {
 		final ItemData data = ItemizeItemProvider.getData(ID);
 
 		// Create new builder
 		final ItemStackBuilder builder = ItemStack.builder(data.getDisplay());
 
-		// Build and apply meta
-		builder.meta(ItemizeMeta.class, metaBuilder -> {
-			data.buildMeta(metaBuilder);
-
-			metaBuilderConsumer.accept(metaBuilder);
-		});
+		// Build meta
+		ItemizeMeta.Builder metaBuilder = new ItemizeMeta.Builder();
+		metaBuilderConsumer.accept(metaBuilder);
+		metaBuilder.data(data);
+		metaBuilder.origin(origin);
+		
+		// Apply the meta
+		builder.meta(metaBuilder.build());
 
 		// Build and return new item stack
 		return builder.build();
