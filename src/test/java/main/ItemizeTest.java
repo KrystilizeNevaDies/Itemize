@@ -22,37 +22,42 @@ import net.minestom.server.world.biomes.Biome;
 
 public class ItemizeTest {
     public static void main(String... args) {
-    	MinecraftServer server = MinecraftServer.init();
-    	
-    	InstanceContainer instance = MinecraftServer.getInstanceManager().createInstanceContainer();
-    	
+    	final MinecraftServer server = MinecraftServer.init();
+
+    	final InstanceContainer instance = MinecraftServer.getInstanceManager().createInstanceContainer();
+
     	instance.setChunkGenerator(new DevelopmentChunkGenerator());
-    	
-    	
-    	GlobalEventHandler handler = MinecraftServer.getGlobalEventHandler();
-    	
-    	handler.addEventCallback(PlayerLoginEvent.class, (event) -> {
+
+
+    	final GlobalEventHandler handler = MinecraftServer.getGlobalEventHandler();
+
+    	handler.addEventCallback(PlayerLoginEvent.class, event -> {
     		event.setSpawningInstance(instance);
     	});
-    	
-    	handler.addEventCallback(PlayerSpawnEvent.class, (event) -> {
-    		Player player = event.getPlayer();
+
+
+
+
+    	handler.addEventCallback(PlayerSpawnEvent.class, event -> {
+    		final Player player = event.getPlayer();
     		player.teleport(new Position(0, 5, 0));
+
+
     	});
-    	
-    	
+
     	server.start("0.0.0.0", 25565);
     }
-    
-    
+
+
     private static class DevelopmentChunkGenerator implements ChunkGenerator {
     	@Override
     	public void generateChunkData(@NotNull ChunkBatch batch, int chunkX, int chunkZ) {
-    		for (int x = 0; x < Chunk.CHUNK_SIZE_X; x++)
-    			for (int z = 0; z < Chunk.CHUNK_SIZE_Z; z++) {
+    		for (int x = 0; x < Chunk.CHUNK_SIZE_X; x++) {
+				for (int z = 0; z < Chunk.CHUNK_SIZE_Z; z++) {
     				batch.setBlock(x, 0, z, Block.STONE);
     				batch.setBlock(x, 1, z, Block.STONE);
     			}
+			}
     	}
 
     	@Override
