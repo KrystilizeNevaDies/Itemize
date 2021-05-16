@@ -36,6 +36,7 @@ public class ItemizeItemProvider implements ItemStackProvider {
 		metaBuilderConsumer.accept(metaBuilder);
 		metaBuilder.data(data);
 		metaBuilder.origin(origin);
+		metaBuilder.tags(data.getTags());
 		
 		// Apply the meta
 		builder.meta(metaBuilder.build());
