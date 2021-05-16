@@ -16,7 +16,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     
     // Minestom
-    implementation 'com.github.Minestom:Minestom:d31fe2d88e'
+    implementation 'com.github.Minestom:Minestom:c4b3e40'
     
     // Socials backend for tracing data
 	implementation 'com.github.KrystilizeNevaDies:Socialize:dbc21a0598'
