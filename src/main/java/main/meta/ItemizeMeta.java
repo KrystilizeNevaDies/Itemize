@@ -10,11 +10,12 @@ import main.data.ItemData;
 import net.minestom.server.item.ItemMeta;
 import net.minestom.server.item.ItemMetaBuilder;
 import net.minestom.server.item.ItemTag;
+import socialize.tracing.OriginReference;
 
 public class ItemizeMeta extends ItemMeta implements ItemMetaBuilder.Provider<ItemizeMeta.Builder> {
 
 	public static final ItemTag<NBT> TAGS = ItemTag.NBT("tags");
-	public static final ItemTag<Long> ORIGIN = ItemTag.Long("origin");
+	public static final ItemTag<NBT> ORIGIN = ItemTag.NBT("origin");
 	public static final ItemTag<String> ITEM_ID = ItemTag.String("item_id");
 
 	public ItemizeMeta(ItemizeMeta.Builder builder) {
@@ -24,9 +25,9 @@ public class ItemizeMeta extends ItemMeta implements ItemMetaBuilder.Provider<It
 	public NBTCompound getTags() {
 		return (NBTCompound) get(ItemizeMeta.TAGS);
 	}
-
-	public long getOrigin() {
-		return get(ItemizeMeta.ORIGIN);
+	
+	public NBTCompound getOrigin() {
+		return (NBTCompound) get(ItemizeMeta.ORIGIN);
 	}
 	
 	public String getID() {
@@ -46,11 +47,6 @@ public class ItemizeMeta extends ItemMeta implements ItemMetaBuilder.Provider<It
         	return this;
         }
 
-        public Builder origin(long origin) {
-        	set(ItemizeMeta.ORIGIN, origin);
-        	return this;
-        }
-
         public Builder data(ItemData data) {
         	set(ItemizeMeta.ITEM_ID, data.getID());
         	customModelData(data.getCmd());
@@ -58,6 +54,11 @@ public class ItemizeMeta extends ItemMeta implements ItemMetaBuilder.Provider<It
     		lore(data.getLore());
         	return this;
         }
+        
+        public Builder origin(OriginReference origin) {
+        	set(ItemizeMeta.ORIGIN, origin.get());
+        	return this;
+		}
 
         @Override
         public void read(@NotNull NBTCompound nbt) {
@@ -71,10 +72,6 @@ public class ItemizeMeta extends ItemMeta implements ItemMetaBuilder.Provider<It
         		ItemData data = ItemData.ITEM_REGISTRY.get(ID);
         		
         		data(data);
-            }
-        	
-        	if (nbt.containsKey(ItemizeMeta.ORIGIN.getKey())) {
-        		origin(nbt.getLong(ItemizeMeta.ORIGIN.getKey()));
             }
         }
 

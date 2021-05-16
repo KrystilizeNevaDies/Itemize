@@ -2,9 +2,15 @@ package main;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
+import java.util.function.Consumer;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jglrxavpok.hephaistos.nbt.NBTCompound;
 
 import main.data.ItemData;
 import net.minestom.server.MinecraftServer;
@@ -24,6 +30,9 @@ import net.minestom.server.instance.batch.ChunkBatch;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.Position;
 import net.minestom.server.world.biomes.Biome;
+import socialize.PlayerSocialsSystem;
+import socialize.tracing.OriginReference;
+import socialize.tracing.OriginRegistry;
 
 public class ItemizeTest {
     public static void main(String... args) {
@@ -46,6 +55,7 @@ public class ItemizeTest {
     	});
     	
     	Itemize.init(null);
+    	PlayerSocialsSystem.init(ORIGIN_REGISTRY);
     	
     	MinecraftServer.getCommandManager().register(new ItemCommand());
 
@@ -76,6 +86,43 @@ public class ItemizeTest {
 
     }
     
+    private static OriginRegistry ORIGIN_REGISTRY = new OriginRegistry() {
+
+    	private volatile Map<OriginReference, NBTCompound> REGISTRY = new ConcurrentHashMap<>();
+    	
+    	private OriginReference ROOT_REFERENCE = new OriginReference();
+    	private NBTCompound ROOT = REGISTRY.put(ROOT_REFERENCE, new NBTCompound());
+    	
+		@Override
+		public OriginReference registerOrigin(NBTCompound origin) {
+			
+			OriginReference reference = new OriginReference();
+			
+			REGISTRY.put(reference, origin);
+			
+			return reference;
+		}
+
+		@Override
+		public void getOrigin(OriginReference reference, Consumer<NBTCompound> consumer) {
+			consumer.accept(REGISTRY.get(reference));
+		}
+
+		@Override
+		public Future<NBTCompound> getOrigin(OriginReference reference) {
+			return CompletableFuture.completedFuture(REGISTRY.get(reference));
+		}
+
+		@Override
+		public NBTCompound getRootOrigin() {
+			return ROOT;
+		}
+
+		@Override
+		public OriginReference getRootOriginReference() {
+			return ROOT_REFERENCE;
+		}
+	};
     
     private static class ItemCommand extends Command {
 
@@ -92,7 +139,12 @@ public class ItemizeTest {
 			Player player = sender.asPlayer();
 			String ID = context.get("id");
 			
-			player.getInventory().addItemStack(Itemize.getProvider().create(ID, 0));
+			player.getInventory().addItemStack(
+				Itemize.getProvider().create(
+					ID, 
+					PlayerSocialsSystem.getOriginRegistry().getRootOriginReference()
+				)
+			);
 		}
     }
 }
