@@ -6,5 +6,6 @@ public enum ItemType {
 	BADGE,
 	BACK,
 	FURNITURE,
-	CURRENCY;
+	CURRENCY,
+	PROFILE_CARD;
 }

@@ -1,10 +1,11 @@
 package main.data;
 
 public enum ItemRarity {
-	NORMAL,
 	COMMON,
+	UNCOMMON,
 	RARE,
-	EPIC,
+	EXOTIC,
 	MYTHICAL,
-	UNOBTAINABLE;
+	LIMITED_EDITION,
+	SECRET_RARE;
 }
