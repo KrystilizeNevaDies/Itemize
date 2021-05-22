@@ -41,21 +41,21 @@ public interface ItemData {
 	public static ItemData from(ItemStack item) {
 		final ItemMeta meta = item.getMeta();
 
-		if (meta instanceof ItemizeMeta) {
-			final String ID = ((ItemizeMeta) meta).getID();
-
-			final ItemData data = ItemData.ITEM_REGISTRY.get(ID);
-
-			if (data == null) {
-				new Throwable("ID: " + ID + " is not a valid item ID. Something has gone very wrong.").printStackTrace();
-				return null;
-			}
-
-			return data;
+		final String ID = meta.get(ItemizeMeta.ITEM_ID);
+		
+		if (ID == null) {
+			new Throwable("Itemstack does not have an ID associated with it.").printStackTrace();
+			return null;
 		}
+		
+		final ItemData data = ItemData.ITEM_REGISTRY.get(ID);
 
-		new Throwable("Itemstack's meta is not an instance of " + ItemizeMeta.class).printStackTrace();
-		return null;
+		if (data == null) {
+			new Throwable("ID: " + ID + " is not a valid item ID. Something has gone very wrong.").printStackTrace();
+			return null;
+		}
+		
+		return data;
 	}
 
 	public static void register(ItemDataProvider provider) {
