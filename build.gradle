@@ -19,5 +19,5 @@ dependencies {
     implementation 'com.github.Minestom:Minestom:c4b3e40'
     
     // Socials backend for tracing data
-	implementation 'com.github.KrystilizeNevaDies:Socialize:dbc21a0598'
+	implementation 'com.github.KrystilizeNevaDies:Socialize:91f075943a'
 }

@@ -1,5 +1,6 @@
 package main.tags;
 
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +10,6 @@ import main.data.ItemData;
 import main.meta.ItemizeMeta;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.ItemStackBuilder;
-import socialize.tracing.OriginReference;
 
 public class ItemizeItemProvider implements ItemStackProvider {
 
@@ -17,7 +17,7 @@ public class ItemizeItemProvider implements ItemStackProvider {
 	 * Creates a new itemstack using the registered data for the ID
 	 */
 	@Override
-	public ItemStack create(String ID, OriginReference origin) {
+	public ItemStack create(String ID, UUID origin) {
 		return create(ID, origin, _m -> {});
 	}
 
@@ -25,7 +25,7 @@ public class ItemizeItemProvider implements ItemStackProvider {
 	 * Creates a new itemstack using the registered data for the ID and the specified meta builder consumer
 	 */
 	@Override
-	public ItemStack create(String ID, OriginReference origin, @NotNull Consumer<ItemizeMeta.Builder> metaBuilderConsumer) {
+	public ItemStack create(String ID, UUID origin, @NotNull Consumer<ItemizeMeta.Builder> metaBuilderConsumer) {
 		final ItemData data = ItemizeItemProvider.getData(ID);
 
 		// Create new builder

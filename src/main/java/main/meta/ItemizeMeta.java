@@ -1,5 +1,6 @@
 package main.meta;
 
+import java.util.UUID;
 import java.util.function.Supplier;
 
 import org.jetbrains.annotations.NotNull;
@@ -10,12 +11,11 @@ import main.data.ItemData;
 import net.minestom.server.item.ItemMeta;
 import net.minestom.server.item.ItemMetaBuilder;
 import net.minestom.server.item.ItemTag;
-import socialize.tracing.OriginReference;
 
 public class ItemizeMeta extends ItemMeta implements ItemMetaBuilder.Provider<ItemizeMeta.Builder> {
 
 	public static final ItemTag<NBT> TAGS = ItemTag.NBT("tags");
-	public static final ItemTag<NBT> ORIGIN = ItemTag.NBT("origin");
+	public static final ItemTag<long[]> ORIGIN = ItemTag.LongArray("origin");
 	public static final ItemTag<String> ITEM_ID = ItemTag.String("item_id");
 
 	public ItemizeMeta(ItemizeMeta.Builder builder) {
@@ -26,8 +26,9 @@ public class ItemizeMeta extends ItemMeta implements ItemMetaBuilder.Provider<It
 		return (NBTCompound) get(ItemizeMeta.TAGS);
 	}
 	
-	public NBTCompound getOrigin() {
-		return (NBTCompound) get(ItemizeMeta.ORIGIN);
+	public UUID getOrigin() {
+		long[] uuidArray = get(ItemizeMeta.ORIGIN);
+		return new UUID(uuidArray[0], uuidArray[1]);
 	}
 	
 	public String getID() {
@@ -55,8 +56,9 @@ public class ItemizeMeta extends ItemMeta implements ItemMetaBuilder.Provider<It
         	return this;
         }
         
-        public Builder origin(OriginReference origin) {
-        	set(ItemizeMeta.ORIGIN, origin.get());
+        public Builder origin(UUID origin) {
+        	long[] uuidArray = {origin.getLeastSignificantBits(), origin.getMostSignificantBits()};
+        	set(ItemizeMeta.ORIGIN, uuidArray);
         	return this;
 		}
 

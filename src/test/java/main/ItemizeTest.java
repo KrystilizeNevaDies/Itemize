@@ -3,6 +3,7 @@ package main;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
@@ -31,7 +32,6 @@ import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.Position;
 import net.minestom.server.world.biomes.Biome;
 import socialize.PlayerSocialsSystem;
-import socialize.tracing.OriginReference;
 import socialize.tracing.OriginRegistry;
 
 public class ItemizeTest {
@@ -88,15 +88,15 @@ public class ItemizeTest {
     
     private static OriginRegistry ORIGIN_REGISTRY = new OriginRegistry() {
 
-    	private volatile Map<OriginReference, NBTCompound> REGISTRY = new ConcurrentHashMap<>();
+    	private volatile Map<UUID, NBTCompound> REGISTRY = new ConcurrentHashMap<>();
     	
-    	private OriginReference ROOT_REFERENCE = new OriginReference();
+    	private UUID ROOT_REFERENCE = UUID.randomUUID();
     	private NBTCompound ROOT = REGISTRY.put(ROOT_REFERENCE, new NBTCompound());
     	
 		@Override
-		public OriginReference registerOrigin(NBTCompound origin) {
+		public UUID registerOrigin(NBTCompound origin) {
 			
-			OriginReference reference = new OriginReference();
+			UUID reference = UUID.randomUUID();
 			
 			REGISTRY.put(reference, origin);
 			
@@ -104,22 +104,17 @@ public class ItemizeTest {
 		}
 
 		@Override
-		public void getOrigin(OriginReference reference, Consumer<NBTCompound> consumer) {
+		public void retrieveOrigin(UUID reference, Consumer<NBTCompound> consumer) {
 			consumer.accept(REGISTRY.get(reference));
 		}
 
 		@Override
-		public Future<NBTCompound> getOrigin(OriginReference reference) {
+		public Future<NBTCompound> retrieveOrigin(UUID reference) {
 			return CompletableFuture.completedFuture(REGISTRY.get(reference));
 		}
 
 		@Override
-		public NBTCompound getRootOrigin() {
-			return ROOT;
-		}
-
-		@Override
-		public OriginReference getRootOriginReference() {
+		public UUID getRootOrigin() {
 			return ROOT_REFERENCE;
 		}
 	};
@@ -142,7 +137,7 @@ public class ItemizeTest {
 			player.getInventory().addItemStack(
 				Itemize.getProvider().create(
 					ID, 
-					PlayerSocialsSystem.getOriginRegistry().getRootOriginReference()
+					PlayerSocialsSystem.getOriginRegistry().getRootOrigin()
 				)
 			);
 		}
