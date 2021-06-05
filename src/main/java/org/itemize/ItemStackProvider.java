@@ -9,7 +9,7 @@ import org.itemize.data.ItemDataProvider;
 public abstract class ItemStackProvider<T extends Object, B extends Object> {
 	protected final ItemDataProvider dataProvider;
 
-	ItemStackProvider(ItemDataProvider dataProvider) {
+	protected ItemStackProvider(ItemDataProvider dataProvider) {
 		this.dataProvider = dataProvider;
 	}
 
