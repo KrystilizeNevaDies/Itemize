@@ -1,11 +1,13 @@
-package main.data;
+package org.itemize.data;
 
-import java.util.Set;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.jglrxavpok.hephaistos.nbt.NBTCompound;
 
 import net.kyori.adventure.text.Component;
-import net.minestom.server.item.Material;
+
 /**
  * This is for backend usage, not designed for public access
  *
@@ -14,7 +16,7 @@ import net.minestom.server.item.Material;
  */
 public class DefaultItemDataProvider implements ItemDataProvider {
 
-	public static enum DefaultItemData implements ItemData {
+	public enum DefaultItemData implements ItemData {
 		TEST_FURNITURE("Test Chair", ItemType.FURNITURE, ItemRarity.COMMON, "This is a test chair! Use it in your room and sit on it!", 22),
 		TEST_BACK("Test Backpack", ItemType.BACK, ItemRarity.UNCOMMON, "This is a test backpack! Used for wearing and testing! Put it on your back slot!", 31),
 		TEST_ITEM("Test Item", ItemType.ITEM, ItemRarity.RARE, "This is a test item! Used for holding and testing!", 4),
@@ -51,8 +53,8 @@ public class DefaultItemDataProvider implements ItemDataProvider {
 		}
 
 		@Override
-		public Material getDisplay() {
-			return Material.LEATHER_HORSE_ARMOR;
+		public String getDisplay() {
+			return "LEATHER_HORSE_ARMOR";
 		}
 
 		@Override
@@ -82,7 +84,18 @@ public class DefaultItemDataProvider implements ItemDataProvider {
 	}
 
 	@Override
-	public Set<ItemData> getItemData() {
-		return Set.of(DefaultItemData.values());
+	public Map<String, ItemData> getItemData() {
+		return Arrays.stream(DefaultItemData.values())
+			.collect(
+				Collectors.toMap(
+					defaultItemData -> defaultItemData.name(),
+					defaultItemData -> defaultItemData
+				)
+			);
+	}
+
+	@Override
+	public ItemData get(String ID) {
+		return DefaultItemData.valueOf(ID.toUpperCase());
 	}
 }

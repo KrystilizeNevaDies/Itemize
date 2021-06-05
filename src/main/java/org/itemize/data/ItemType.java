@@ -1,4 +1,4 @@
-package main.data;
+package org.itemize.data;
 
 public enum ItemType {
 	HAT,

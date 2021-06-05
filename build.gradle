@@ -15,9 +15,21 @@ dependencies {
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
     
-    // Minestom
-    implementation 'com.github.Minestom:Minestom:c4b3e40'
-    
     // Socials backend for tracing data
 	implementation 'com.github.KrystilizeNevaDies:Socialize:91f075943a'
+
+    // Adventure, for user-interface
+    api "net.kyori:adventure-api:$adventureVersion"
+    api "net.kyori:adventure-text-serializer-gson:$adventureVersion"
+    api "net.kyori:adventure-text-serializer-plain:$adventureVersion"
+    api "net.kyori:adventure-text-serializer-legacy:$adventureVersion"
+
+    // NBT parsing/manipulation/saving
+    api("com.github.jglrxavpok:Hephaistos:${project.hephaistosVersion}")
+    api("com.github.jglrxavpok:Hephaistos:${project.hephaistosVersion}:gson")
+    api("com.github.jglrxavpok:Hephaistos:${project.hephaistosVersion}") {
+        capabilities {
+            requireCapability("org.jglrxavpok.nbt:Hephaistos-gson")
+        }
+    }
 }
