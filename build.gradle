@@ -10,9 +10,6 @@ repositories {
 }
 
 dependencies {
-    // JUnit test framework
-    testImplementation 'junit:junit:4.12'
-
-    // Minestom (new block api)
-    implementation 'com.github.Minestom:Minestom:new-block-api-SNAPSHOT'
+    // Minestom
+    implementation 'com.github.Minestom:Minestom:-SNAPSHOT'
 }
