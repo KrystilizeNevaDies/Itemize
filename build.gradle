@@ -5,6 +5,9 @@ plugins {
     id 'maven-publish'
 }
 
+group 'org.itemize'
+version '1.0-SNAPSHOT'
+
 sourceSets {
     main {
         java {
