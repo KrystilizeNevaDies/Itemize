@@ -13,7 +13,7 @@ import org.jglrxavpok.hephaistos.nbt.NBTCompound;
  * {
  *     SIGNED: {UUID: "db64ffdc-cf78-4cd6-a06c-9973ed55481d", DATE: 1626312434, DISPLAY_NAME: "Krystilize"},
  *     ENHANCED: {LEVEL: 3, DATE: 1626311846},
- *     USE_EFFECTS: {EXPLOSION: {LEVEL: 4, TOTAL_EXP: 254}, THUNDER_STRIKE: {LEVEL: 2, TOTAL_EXP: 23}}
+ *     ON_HIT: {EXPLOSION: {LEVEL: 4, TOTAL_EXP: 254}, THUNDER_STRIKE: {LEVEL: 2, TOTAL_EXP: 23}}
  * }
  */
 public interface ItemBehaviorContainer {

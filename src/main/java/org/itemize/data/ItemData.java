@@ -16,7 +16,6 @@ public record ItemData(
 		int cmd,
 		NBTCompound data
 ) {
-
 	public void apply(ItemMetaBuilder builder) {
 		builder.displayName(displayName);
 		builder.customModelData(cmd);
