@@ -5,6 +5,14 @@ plugins {
     id 'maven-publish'
 }
 
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+    }
+}
+
 repositories {
     mavenCentral()
     maven { url 'https://repo.spongepowered.org/maven' }
