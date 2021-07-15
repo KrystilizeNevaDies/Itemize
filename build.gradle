@@ -13,3 +13,8 @@ dependencies {
     // Minestom
     implementation 'com.github.Minestom:Minestom:-SNAPSHOT'
 }
+
+wrapper {
+    gradleVersion = "7.0.0"
+    distributionType = Wrapper.DistributionType.ALL
+}
