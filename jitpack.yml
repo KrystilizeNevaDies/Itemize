@@ -1,4 +1,7 @@
 before_install:
-  - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
-  - source install-jdk.sh --feature 16
-  - jshell --version
+  - source "$HOME/.sdkman/bin/sdkman-init.sh"
+  - sdk update
+  - sdk install java 16.0.1-open
+  - sdk use java 16.0.1-open
+install:
+  -  chmod +x gradlew && ./gradlew publishToMavenLocal -Peula=true
