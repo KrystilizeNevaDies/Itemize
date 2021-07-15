@@ -3,23 +3,46 @@ package org.itemize;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import net.minestom.server.item.ItemStack;
+import net.minestom.server.item.ItemStackBuilder;
 import org.itemize.data.ItemData;
 import org.itemize.data.ItemDataProvider;
+import org.itemize.meta.ItemizeMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class ItemStackProvider<T extends Object, B extends Object> {
+public class ItemStackProvider {
 	protected final ItemDataProvider dataProvider;
 
-	protected ItemStackProvider(ItemDataProvider dataProvider) {
+	protected ItemStackProvider(@NotNull ItemDataProvider dataProvider) {
 		this.dataProvider = dataProvider;
 	}
 
-	public ItemDataProvider getDataProvider() {
+	public @NotNull ItemDataProvider getDataProvider() {
 		return dataProvider;
 	}
 
-	public T create(String ID, UUID origin) {
-		return create(ID, origin, _m -> {});
-	};
+	public @NotNull ItemStack create(@NotNull String ID, @NotNull UUID origin, @Nullable Consumer<ItemizeMeta.Builder> metaBuilderConsumer) {
+		ItemData itemData = dataProvider.get(ID);
 
-	public abstract T create(String ID, UUID origin, Consumer<B> builderConsumer);
+		if (itemData == null)
+			throw new IllegalArgumentException("No ItemData found for ID: " + ID + ". DataProvider: " + dataProvider);
+
+		// Setup item stack builder
+		ItemStackBuilder builder = ItemStack.builder(itemData.display());
+
+		// Build meta
+		ItemizeMeta.Builder meta = new ItemizeMeta.Builder();
+		meta.itemData(itemData);
+		meta.origin(origin);
+
+		// Expose method to builder
+		if (metaBuilderConsumer != null)
+			metaBuilderConsumer.accept(meta);
+
+		// Apply meta
+		builder.meta(meta.build());
+
+		return builder.build();
+	};
 }

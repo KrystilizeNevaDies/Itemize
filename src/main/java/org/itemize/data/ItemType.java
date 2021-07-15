@@ -1,11 +1,7 @@
 package org.itemize.data;
 
-public enum ItemType {
-	HAT,
-	ITEM,
-	BADGE,
-	BACK,
-	FURNITURE,
-	CURRENCY,
-	PROFILE_CARD;
-}
+
+import net.kyori.adventure.text.Component;
+import org.jglrxavpok.hephaistos.nbt.NBTCompound;
+
+public record ItemType(Component displayName, NBTCompound data) {}

@@ -1,11 +1,6 @@
 package org.itemize.data;
 
-public enum ItemRarity {
-	COMMON,
-	UNCOMMON,
-	RARE,
-	EXOTIC,
-	MYTHICAL,
-	LIMITED_EDITION,
-	SECRET_RARE;
-}
+import net.kyori.adventure.text.Component;
+import org.jglrxavpok.hephaistos.nbt.NBTCompound;
+
+public record ItemRarity(Component displayName, NBTCompound data) {}
