@@ -11,22 +11,22 @@ import org.itemize.meta.ItemizeMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ItemStackProvider {
-	protected final ItemDataProvider dataProvider;
+final public class ItemStackProvider {
+	private final ItemDataProvider itemDataProvider;
 
-	protected ItemStackProvider(@NotNull ItemDataProvider dataProvider) {
-		this.dataProvider = dataProvider;
+	public ItemStackProvider(@NotNull ItemDataProvider dataProvider) {
+		this.itemDataProvider = dataProvider;
 	}
 
-	public @NotNull ItemDataProvider getDataProvider() {
-		return dataProvider;
+	public @NotNull ItemDataProvider getItemDataProvider() {
+		return itemDataProvider;
 	}
 
 	public @NotNull ItemStack create(@NotNull String ID, @NotNull UUID origin, @Nullable Consumer<ItemizeMeta.Builder> metaBuilderConsumer) {
-		ItemData itemData = dataProvider.get(ID);
+		ItemData itemData = itemDataProvider.get(ID);
 
 		if (itemData == null)
-			throw new IllegalArgumentException("No ItemData found for ID: " + ID + ". DataProvider: " + dataProvider);
+			throw new IllegalArgumentException("No ItemData found for ID: " + ID + ". DataProvider: " + itemDataProvider);
 
 		// Setup item stack builder
 		ItemStackBuilder builder = ItemStack.builder(itemData.display());
