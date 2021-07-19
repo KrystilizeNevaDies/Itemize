@@ -3,11 +3,11 @@ package org.itemize;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import net.minestom.server.item.ItemMetaBuilder;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.ItemStackBuilder;
 import org.itemize.data.ItemData;
 import org.itemize.data.ItemDataProvider;
-import org.itemize.meta.ItemizeMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +22,7 @@ final public class ItemStackProvider {
 		return itemDataProvider;
 	}
 
-	public @NotNull ItemStack create(@NotNull String ID, @NotNull UUID origin, @Nullable Consumer<ItemizeMeta.Builder> metaBuilderConsumer) {
+	public @NotNull ItemStack create(@NotNull String ID, @NotNull UUID origin, @Nullable Consumer<ItemMetaBuilder> metaBuilderConsumer) {
 		ItemData itemData = itemDataProvider.get(ID);
 
 		if (itemData == null)
@@ -32,16 +32,16 @@ final public class ItemStackProvider {
 		ItemStackBuilder builder = ItemStack.builder(itemData.display());
 
 		// Build meta
-		ItemizeMeta.Builder meta = new ItemizeMeta.Builder();
-		meta.itemData(itemData);
-		meta.origin(origin);
+		builder.meta(meta -> {
+			// Expose to consumer
+			if (metaBuilderConsumer != null)
+				metaBuilderConsumer.accept(meta);
 
-		// Expose method to builder
-		if (metaBuilderConsumer != null)
-			metaBuilderConsumer.accept(meta);
+			// Apply ItemData
+			itemData.apply(meta);
 
-		// Apply meta
-		builder.meta(meta.build());
+			return meta;
+		});
 
 		return builder.build();
 	};
