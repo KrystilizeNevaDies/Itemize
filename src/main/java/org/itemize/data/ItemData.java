@@ -58,7 +58,7 @@ public record ItemData(
 		// Lore tag
 
 		// Convert to NBTList
-		NBTList<NBTString> lore = new NBTList<>(NBTTypes.TAG_Compound);
+		NBTList<NBTString> lore = new NBTList<>(NBTTypes.TAG_String);
 
 		// Convert and add all
 		Arrays.stream(lore())
