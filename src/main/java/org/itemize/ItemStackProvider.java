@@ -6,12 +6,14 @@ import java.util.function.Consumer;
 import net.minestom.server.item.ItemMetaBuilder;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.ItemStackBuilder;
+import net.minestom.server.tag.Tag;
 import org.itemize.data.ItemData;
 import org.itemize.data.ItemDataProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-final public class ItemStackProvider {
+public class ItemStackProvider {
+	protected static final Tag<long[]> TAG_ORIGIN = Tag.LongArray("OriginUUID");
 	private final ItemDataProvider itemDataProvider;
 
 	public ItemStackProvider(@NotNull ItemDataProvider dataProvider) {
@@ -31,18 +33,32 @@ final public class ItemStackProvider {
 		// Setup item stack builder
 		ItemStackBuilder builder = ItemStack.builder(itemData.display());
 
-		// Build meta
+		// Prepare item
+		prepare(builder, ID, itemData, origin);
+
+		// Expose to consumer
 		builder.meta(meta -> {
-			// Expose to consumer
 			if (metaBuilderConsumer != null)
 				metaBuilderConsumer.accept(meta);
-
-			// Apply ItemData
-			itemData.apply(meta);
-
 			return meta;
 		});
 
 		return builder.build();
-	};
+	}
+
+	protected void prepare(ItemStackBuilder builder, String ID, ItemData itemData, UUID origin) {
+		// Display
+		builder.displayName(itemData.displayName());
+		builder.lore(itemData.lore());
+
+		// Meta
+		builder.meta(itemMetaBuilder -> {
+			// ItemData
+			itemData.apply(itemMetaBuilder);
+
+			// Origin
+			itemMetaBuilder.set(TAG_ORIGIN, new long[] {origin.getLeastSignificantBits(), origin.getMostSignificantBits()});
+			return itemMetaBuilder;
+		});
+	}
 }
