@@ -2,6 +2,7 @@ package org.itemize;
 
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import net.minestom.server.item.ItemMetaBuilder;
 import net.minestom.server.item.ItemStack;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemStackProvider {
-	protected static final Tag<long[]> TAG_ORIGIN = Tag.LongArray("OriginUUID");
+	protected static final @NotNull Tag<UUID> TAG_ORIGIN = UUIDTag.get("itemize:tag_origin");
 	private final ItemDataProvider itemDataProvider;
 
 	public ItemStackProvider(@NotNull ItemDataProvider dataProvider) {
@@ -24,17 +25,38 @@ public class ItemStackProvider {
 		return itemDataProvider;
 	}
 
-	public @NotNull ItemStack create(@NotNull String ID, @NotNull UUID origin, @Nullable Consumer<ItemMetaBuilder> metaBuilderConsumer) {
+	public @NotNull ItemStack create(
+			@NotNull Supplier<ItemData> itemDataSupplier,
+			@NotNull UUID origin,
+			@Nullable Consumer<ItemMetaBuilder> metaBuilderConsumer
+	) {
+		return create(itemDataSupplier.get(), origin, metaBuilderConsumer);
+	}
+
+	public @NotNull ItemStack create(
+			@NotNull String ID,
+			@NotNull UUID origin,
+			@Nullable Consumer<ItemMetaBuilder> metaBuilderConsumer
+	) {
 		ItemData itemData = itemDataProvider.get(ID);
 
-		if (itemData == null)
+		if (itemData == null) {
 			throw new IllegalArgumentException("No ItemData found for ID: " + ID + ". DataProvider: " + itemDataProvider);
+		}
 
+		return create(itemData, origin, metaBuilderConsumer);
+	}
+
+	public @NotNull ItemStack create(
+			@NotNull ItemData itemData,
+			@NotNull UUID origin,
+			@Nullable Consumer<ItemMetaBuilder> metaBuilderConsumer
+	) {
 		// Setup item stack builder
 		ItemStackBuilder builder = ItemStack.builder(itemData.display());
 
 		// Prepare item
-		prepare(builder, ID, itemData, origin);
+		prepare(builder, itemData, origin);
 
 		// Expose to consumer
 		builder.meta(meta -> {
@@ -46,7 +68,7 @@ public class ItemStackProvider {
 		return builder.build();
 	}
 
-	protected void prepare(ItemStackBuilder builder, String ID, ItemData itemData, UUID origin) {
+	protected void prepare(ItemStackBuilder builder, ItemData itemData, UUID origin) {
 		// Display
 		builder.displayName(itemData.displayName());
 		builder.lore(itemData.lore());
@@ -57,7 +79,7 @@ public class ItemStackProvider {
 			itemData.apply(itemMetaBuilder);
 
 			// Origin
-			itemMetaBuilder.set(TAG_ORIGIN, new long[] {origin.getLeastSignificantBits(), origin.getMostSignificantBits()});
+			itemMetaBuilder.set(TAG_ORIGIN, origin);
 			return itemMetaBuilder;
 		});
 	}
